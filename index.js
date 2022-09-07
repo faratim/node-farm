@@ -31,9 +31,21 @@ const fs = require('fs');
 //////////////////////////////////////
 // SERVER
 const http = require('http');
+const url = require('url');
 
-const server = http.createServer((req, res) => { // req is the request details, res is the response from the server
-    res.end('Hello from the server.'); //sends response to the user any time a request is sent
+const server = http.createServer((req, res) => {
+    const pathName = req.url;
+
+    if (pathName === '/' || pathName === '/overview') {
+        res.end('This is the overview.');
+    } else if (pathName === '/product') {
+        res.end('This is the product page.');
+    } else {
+        res.writeHead(404, {
+            'Content-type': 'text/html'
+        });
+        res.end('<h1>Page not found!</h1>');
+    }
 });
 
 server.listen(8000, '127.0.0.1', (err, res) => {
