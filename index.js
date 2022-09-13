@@ -1,41 +1,18 @@
+// Core Modules
 const fs = require('fs');
-
-
-
-//////////////////////////////////////
-// FILES
-
-// const textIn = fs.readFileSync('./txt/input.txt', 'utf-8');
-// console.log(textIn);
-
-// const textOut = `This is what we know about the avocado: ${textIn}\nCreated on ${Date.now()}';`
-
-// fs.writeFileSync('./txt/output.txt', textOut);
-// console.log('File written!');
-
-//Non-blocking, asynchronous way
-// fs.readFile('./txt/start.txt', 'utf-8', (err, data1) => {
-//     if (err) return console.error(err);
-//     fs.readFile(`./txt/${data1}.txt`, 'utf-8', (err, data2) => {
-//         console.log(data2);
-//         fs.readFile('./txt/append.txt', 'utf-8', (err, data3) => {
-//             console.log(data3);
-
-//             fs.writeFile('./txt/final.txt', `${data2}\n${data3}`, 'utf-8', err => {
-//                 console.log('File has been written.');
-//             })
-//         })
-//     })
-// })
-
-//////////////////////////////////////
-// SERVER
 const http = require('http');
 const url = require('url');
+
+//3rd Party Modules
+const slugify = require('slugify');
+
+//Custom Modules
 const replaceTemplate = require('./modules/replace-template');
 
 
 
+
+//Templates and Variables
 const tempOverview = fs.readFileSync(`${__dirname}/templates/template-overview.html`, 'utf-8');
 const tempCard = fs.readFileSync(`${__dirname}/templates/template-card.html`, 'utf-8');
 const tempProduct = fs.readFileSync(`${__dirname}/templates/template-product.html`, 'utf-8');
@@ -43,7 +20,12 @@ const tempProduct = fs.readFileSync(`${__dirname}/templates/template-product.htm
 const data = fs.readFileSync(`${__dirname}/dev-data/data.json`, 'utf-8')
 const dataObj = JSON.parse(data);
     
+//Slugify (for practice)
+const slugs = dataObj.map(el => slugify(el.productName, { lower: true }));
+console.log(slugs);
 
+//////////////////////////////////////
+// SERVER
 const server = http.createServer((req, res) => {
     
     const { query, pathname } = url.parse(req.url, true)
